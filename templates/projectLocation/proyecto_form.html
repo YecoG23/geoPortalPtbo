@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Crear Proyectos{% endblock title %}
+
+{% block content %}
+
+<div>
+	<h1>Creacion de Proyectos</h1>
+
+	<form method="post">{% csrf_token %}
+		{{ form.as_p }}
+		<input type="submit" value="Save">
+	</form>
+
+</div>
+{% endblock %}

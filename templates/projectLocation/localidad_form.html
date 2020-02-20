@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Crear Localidades{% endblock title %}
+
+{% block content %}
+
+<div>
+	<h1>Creacion de Localidades</h1>
+
+	<form method="post">{% csrf_token %}
+		{{ form.as_p }}
+		<input type="submit" value="Save">
+	</form>
+
+</div>
+
+{% endblock %}
