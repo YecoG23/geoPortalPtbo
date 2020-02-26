@@ -29,22 +29,7 @@
     		zoomOffset: -1,
     		accessToken: 'your.mapbox.access.token'
     	}).addTo(mymap);
-
-    	var marker = L.marker([-10.774303, -75.813227]).addTo(mymap);
-    	marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
-
-	// var popup = L.popup();
-
-	// function onMapClick(e) {
-	// 	popup
-	// 	.setLatLng(e.latlng)
-	// 	.setContent("You clicked the map at " + e.latlng.toString())
-	// 	.openOn(mymap);
-	// }
-
-	// mymap.on('click', onMapClick);
-
-
+        
         // Add GeoJSON layer
         L.geoJson(data).addTo(mymap);
     });

@@ -3,7 +3,11 @@
 
 {% load crispy_forms_tags %}
 
-{% block title %}Crear Proyectos{% endblock title %}
+{% block title %}Nuevo Proyecto{% endblock title %}
+
+{% block page_css_datepicker %}
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css" />
+{% endblock %}
 
 {% block content %}
 
@@ -24,10 +28,6 @@
 </div>
 {% endblock %}
 
-{% block page_css_datepicker %}
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css" />
-{% endblock %}
-
 {% block page_js_datepicker %}
   <script type="text/javascript">
       $(function() {
@@ -35,7 +35,7 @@
             format: 'DD/MM/YYYY',
             widgetPositioning:{
                                 horizontal: 'auto',
-                                vertical: 'bottom'
+                                vertical: 'auto'
                             },
             sideBySide: true,
           });
