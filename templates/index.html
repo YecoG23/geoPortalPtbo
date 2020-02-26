@@ -12,39 +12,43 @@
 {% block content %}
 
 <div>
-	<h1>Bootstrap starter template</h1>
-	<p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
-
-	<div id="mapid">
-
+	<div class="container-fluid" id="mapid">
 	</div>
 </div>
 
 <script>
-	var mymap = L.map('mapid').setView([51.505, -0.09], 13);
-	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoieWVjbzIzIiwiYSI6ImNrNnZvdnNhdjAwM2Uza285cnVzejFnbGcifQ.NY_Z2Zm2h7wH2LWo9-HGCw', {
-		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-		maxZoom: 18,
-		id: 'mapbox/streets-v11',
-		tileSize: 512,
-		zoomOffset: -1,
-		accessToken: 'your.mapbox.access.token'
-	}).addTo(mymap);
+	var dataurl = "{% url 'data' %}";
+    // Download GeoJSON via Ajax
+    $.getJSON(dataurl, function (data) {
+    	var mymap = L.map('mapid').setView([-10.774303, -75.813227], 13);
+    	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoieWVjbzIzIiwiYSI6ImNrNnZvdnNhdjAwM2Uza285cnVzejFnbGcifQ.NY_Z2Zm2h7wH2LWo9-HGCw', {
+    		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    		maxZoom: 18,
+    		id: 'mapbox/streets-v11',
+    		tileSize: 512,
+    		zoomOffset: -1,
+    		accessToken: 'your.mapbox.access.token'
+    	}).addTo(mymap);
 
-	var marker = L.marker([51.5, -0.09]).addTo(mymap);
-	marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+    	var marker = L.marker([-10.774303, -75.813227]).addTo(mymap);
+    	marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
 
-	var popup = L.popup();
+	// var popup = L.popup();
 
-	function onMapClick(e) {
-		popup
-		.setLatLng(e.latlng)
-		.setContent("You clicked the map at " + e.latlng.toString())
-		.openOn(mymap);
-	}
+	// function onMapClick(e) {
+	// 	popup
+	// 	.setLatLng(e.latlng)
+	// 	.setContent("You clicked the map at " + e.latlng.toString())
+	// 	.openOn(mymap);
+	// }
 
-	mymap.on('click', onMapClick);
-	
+	// mymap.on('click', onMapClick);
+
+
+        // Add GeoJSON layer
+        L.geoJson(data).addTo(mymap);
+    });
+
 </script>
 
 {% endblock %}

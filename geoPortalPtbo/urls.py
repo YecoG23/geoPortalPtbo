@@ -17,8 +17,15 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
 
+from djgeojson.views import GeoJSONLayerView
+
+from projectLocation.models import Proyecto
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',TemplateView.as_view(template_name='index.html'), name='home'),
-    path('proyectos/',include('projectLocation.urls'))
+    path('proyectos/',include('projectLocation.urls')),
+
+    ##URL GEOJSON
+    path('data',GeoJSONLayerView.as_view(model=Proyecto), name='data')
 ]

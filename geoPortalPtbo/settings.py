@@ -31,42 +31,45 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django.contrib.gis',
-    'projectLocation',
+'django.contrib.admin',
+'django.contrib.auth',
+'django.contrib.contenttypes',
+'django.contrib.sessions',
+'django.contrib.messages',
+'django.contrib.staticfiles',
+'django.contrib.gis',
+'djgeojson',
+'crispy_forms',
+'leaflet',
+'projectLocation',
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+'django.middleware.security.SecurityMiddleware',
+'django.contrib.sessions.middleware.SessionMiddleware',
+'django.middleware.common.CommonMiddleware',
+'django.middleware.csrf.CsrfViewMiddleware',
+'django.contrib.auth.middleware.AuthenticationMiddleware',
+'django.contrib.messages.middleware.MessageMiddleware',
+'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'geoPortalPtbo.urls'
 
 TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates/'],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
+{
+'BACKEND': 'django.template.backends.django.DjangoTemplates',
+'DIRS': ['templates/'],
+'APP_DIRS': True,
+'OPTIONS': {
+'context_processors': [
+'django.template.context_processors.debug',
+'django.template.context_processors.request',
+'django.contrib.auth.context_processors.auth',
+'django.contrib.messages.context_processors.messages',
+],
+},
+},
 ]
 
 WSGI_APPLICATION = 'geoPortalPtbo.wsgi.application'
@@ -76,13 +79,13 @@ WSGI_APPLICATION = 'geoPortalPtbo.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'geoPortalPtboDB',
-        'USER': 'postgres',
-        'PASSWORD': 'yecopostgres',
-        'PORT': '',
-    }
+'default': {
+'ENGINE': 'django.contrib.gis.db.backends.postgis',
+'NAME': 'geoPortalPtboDB',
+'USER': 'postgres',
+'PASSWORD': 'yecopostgres',
+'PORT': '',
+}
 }
 
 
@@ -90,25 +93,25 @@ DATABASES = {
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+{
+'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+},
+{
+'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+},
+{
+'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+},
+{
+'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+},
 ]
 
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-PE'
 
 TIME_ZONE = 'UTC'
 
@@ -124,6 +127,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = BASE_DIR + '/static'
+
 ##GDAL CONFIGURATION
 
 if os.name == 'nt':
@@ -131,9 +136,25 @@ if os.name == 'nt':
     OSGEO4W = r"C:\OSGeo4W"
     if '64' in platform.architecture()[0]:
         OSGEO4W += "64"
-    assert os.path.isdir(OSGEO4W), "Directory does not exist: " + OSGEO4W
-    os.environ['OSGEO4W_ROOT'] = OSGEO4W
-    os.environ['GDAL_DATA'] = OSGEO4W + r"\share\gdal" 
-    os.environ['PROJ_LIB'] = OSGEO4W + r"\share\proj"
-    GDAL_LIBRARY_PATH = r'C:\OSGeo4W64\bin\gdal300'
-    os.environ['PATH'] = OSGEO4W + r"\bin;" + os.environ['PATH']
+        assert os.path.isdir(OSGEO4W), "Directory does not exist: " + OSGEO4W
+        os.environ['OSGEO4W_ROOT'] = OSGEO4W
+        os.environ['GDAL_DATA'] = OSGEO4W + r"\share\gdal" 
+        os.environ['PROJ_LIB'] = OSGEO4W + r"\share\proj"
+        GDAL_LIBRARY_PATH = r'C:\OSGeo4W64\bin\gdal300'
+        os.environ['PATH'] = OSGEO4W + r"\bin;" + os.environ['PATH']
+
+#CRISPY_CONFIG
+CRISPY_TEMPLATE_PACK ='bootstrap4'
+
+#LEAFLET CONFIG
+LEAFLET_CONFIG = {
+# 'SPATIAL_EXTENT': (5.0, 44.0, 7.5, 46),
+'DEFAULT_CENTER': (-10.774303, -75.813227),
+'DEFAULT_ZOOM': 10,
+'TILES': [('Mapbox','https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoieWVjbzIzIiwiYSI6ImNrNnZvdnNhdjAwM2Uza285cnVzejFnbGcifQ.NY_Z2Zm2h7wH2LWo9-HGCw',
+ {'attribution': 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+ 'id':'mapbox/streets-v11',
+ 'accessToken':'your.mapbox.access.token'})],
+'MIN_ZOOM': 3,
+'MAX_ZOOM': 18,
+}
