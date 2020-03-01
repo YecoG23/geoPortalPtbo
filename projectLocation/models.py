@@ -20,3 +20,8 @@ class Proyecto (gismodels.Model):
 
 	def __str__(self):
 		return self.nombre
+
+	@property
+	def popupContent(self):
+		return '<strong>{}</strong><hr><p class="text-muted"><strong>Localidad:</strong>{}</br><strong>Coordinadas:</strong> {},{}</p>'.format(self.nombre,self.localidad,self.geom.x,self.geom.y)
+	

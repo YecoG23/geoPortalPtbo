@@ -148,9 +148,9 @@ CRISPY_TEMPLATE_PACK ='bootstrap4'
 
 #LEAFLET CONFIG
 LEAFLET_CONFIG = {
-# 'SPATIAL_EXTENT': (5.0, 44.0, 7.5, 46),
+# 'SPATIAL_EXTENT': (-5, -75, -5, -45),
 'DEFAULT_CENTER': (-10.774303, -75.813227),
-'DEFAULT_ZOOM': 10,
+'DEFAULT_ZOOM': 13,
 'TILES': [('Mapbox','https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoieWVjbzIzIiwiYSI6ImNrNnZvdnNhdjAwM2Uza285cnVzejFnbGcifQ.NY_Z2Zm2h7wH2LWo9-HGCw',
  {'attribution': 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
  'id':'mapbox/streets-v11',
