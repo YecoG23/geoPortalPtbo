@@ -59,7 +59,6 @@
 </div>
 
 <div class="mt-5 pb-5">
-<!-- TABLE SHOWING INFORMATION -->
 <table id="example" class="display" style="width:100%">
         <thead>
             <tr>
@@ -100,6 +99,7 @@
 
 <script>
 	var dataurl = "{% url 'data' %}";
+    
     // Download GeoJSON via Ajax
     $.getJSON(dataurl, function (data) {
     	var mymap = L.map('mapid').setView([-10.774303, -75.813227], 13);
@@ -112,27 +112,42 @@
     		accessToken: 'your.mapbox.access.token'
     	}).addTo(mymap);
 
-        // Add GeoJSON layer
-        // L.geoJson(data).addTo(mymap);
-
-        // var layerGroup = L.geoJSON(data, {
-        //   onEachFeature: function (feature, layer) {
-        //     layer.bindPopup('<h1>'+feature.properties.model["nombre"]+'</h1><p>nombre: '+feature.properties.model+'</p>');
-        //   }
-        // }).addTo(mymap);
-
+        var all_proyectos = new L.LayerGroup();
 
         var collection = {{ proyectos |geojsonfeature:"popupContent"|safe }};
         function onEachFeature(feature, layer) {
             if (feature.properties && feature.properties.popupContent) {
               layer.bindPopup(feature.properties.popupContent);
+              layer.addTo(all_proyectos);
             }
+
           }
 
         L.geoJson(collection, {onEachFeature: onEachFeature}).addTo(mymap);
 
+        console.log(all_proyectos);
+
+        var baseMaps = {
+        mapBox: L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoieWVjbzIzIiwiYSI6ImNrNnZvdnNhdjAwM2Uza285cnVzejFnbGcifQ.NY_Z2Zm2h7wH2LWo9-HGCw', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: 'your.mapbox.access.token'
+        })
+    };
+
+    var overlayMaps = {
+    "Proyectos": all_proyectos
+    };
+
+    L.control.layers(baseMaps, overlayMaps).addTo(mymap);
+
 
     });
+
+
 
 </script>
 {% endblock %}
