@@ -27,3 +27,7 @@ class ProyectoCreateView(CreateView):
 	model = Proyecto
 	form_class = ProyectoForm
 	success_url='/'
+
+	def form_valid(self, form):
+		form.instance.show_map=True
+		return super(ProyectoCreateView, self).form_valid(form)

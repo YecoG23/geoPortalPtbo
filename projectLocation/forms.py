@@ -1,4 +1,4 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, CheckboxInput
 from django.forms.models import ModelChoiceField, ModelMultipleChoiceField
 from django.contrib.gis import forms
 
@@ -34,5 +34,6 @@ class ProyectoForm(ModelForm):
 		exclude = '__all__'
 		widgets = {
 			# 'geom': forms.OSMWidget(attrs=LEAFLET_WIDGET_ATTRS),
-			'geom':LeafletWidget()
+			'geom':LeafletWidget(),
+			# 'show_map':CheckboxInput(default=True)
 		}

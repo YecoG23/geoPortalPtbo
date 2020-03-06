@@ -17,6 +17,7 @@ class Proyecto (gismodels.Model):
 	geom = gismodels.PointField()
 	localidad = models.ForeignKey(Localidad,on_delete=models.CASCADE)
 	fecha_creacion = models.DateField(blank=True)
+	show_map = models.BooleanField(default=True)
 
 	def __str__(self):
 		return self.nombre

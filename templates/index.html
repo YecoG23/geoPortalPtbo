@@ -21,33 +21,35 @@
   <script>
     $(document).ready(function() {
     $('#example').DataTable(
-     {
+    {
             "language": {
-    "decimal":        "",
-    "emptyTable":     "No hay datos que mostrar",
-    "info":           "Mostrando _START_ a _END_ de _TOTAL_ filas",
-    "infoEmpty":      "Mostrando 0 a 0 de 0 filas",
-    "infoFiltered":   "(filtrado de _MAX_ total filas)",
-    "infoPostFix":    "",
-    "thousands":      ",",
-    "lengthMenu":     "Mostrar _MENU_ filas",
-    "loadingRecords": "Cargando...",
-    "processing":     "Procesando...",
-    "search":         "Buscar:",
-    "zeroRecords":    "No existe datos segun busqueda",
-    "paginate": {
-        "first":      "Primero",
-        "last":       "Ultimo",
-        "next":       "Siguiente",
-        "previous":   "Anterior"
-    },
-    "aria": {
-        "sortAscending":  ": activar para ordenar en forma ascendente",
-        "sortDescending": ": activar para ordenar en forma descendente"
+                "decimal":        "",
+                "emptyTable":     "No hay datos que mostrar",
+                "info":           "Mostrando _START_ a _END_ de _TOTAL_ filas",
+                "infoEmpty":      "Mostrando 0 a 0 de 0 filas",
+                "infoFiltered":   "(filtrado de _MAX_ total filas)",
+                "infoPostFix":    "",
+                "thousands":      ",",
+                "lengthMenu":     "Mostrar _MENU_ filas",
+                "loadingRecords": "Cargando...",
+                "processing":     "Procesando...",
+                "search":         "Buscar:",
+                "zeroRecords":    "No existe datos segun busqueda",
+                "paginate": {
+                    "first":      "Primero",
+                    "last":       "Ultimo",
+                    "next":       "Siguiente",
+                    "previous":   "Anterior"
+                },
+                "aria": {
+                    "sortAscending":  ": activar para ordenar en forma ascendente",
+                    "sortDescending": ": activar para ordenar en forma descendente"
+                }
+            }
     }
-}
-        } 
+    
  );
+
 } );
 </script>
 {% endblock %}
@@ -62,6 +64,7 @@
 <table id="example" class="display" style="width:100%">
         <thead>
             <tr>
+                <th>ID</th>
                 <th>Nombre</th>
                 <th>Ubicacion</th>
                 <th>Localidad</th>
@@ -71,6 +74,9 @@
         <tbody>
                 {%for pro in proyectos %}
                 <tr>
+                    <td>
+                        {{pro.id}}
+                    </td>
                     <td>
                         {{pro.nombre}}
                     </td>
@@ -88,6 +94,7 @@
         </tbody>
         <tfoot>
             <tr>
+                <th>ID</th>
                 <th>Nombre</th>
                 <th>Ubicacion</th>
                 <th>Localidad</th>
@@ -98,23 +105,34 @@
 </div>
 
 <script>
-	var dataurl = "{% url 'data' %}";
-    
-    // Download GeoJSON via Ajax
-    $.getJSON(dataurl, function (data) {
-    	var mymap = L.map('mapid').setView([-10.774303, -75.813227], 13);
-    	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoieWVjbzIzIiwiYSI6ImNrNnZvdnNhdjAwM2Uza285cnVzejFnbGcifQ.NY_Z2Zm2h7wH2LWo9-HGCw', {
-    		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    		maxZoom: 18,
-    		id: 'mapbox/streets-v11',
-    		tileSize: 512,
-    		zoomOffset: -1,
-    		accessToken: 'your.mapbox.access.token'
-    	}).addTo(mymap);
+	
+        var baseMaps = {
+        Calles: L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoieWVjbzIzIiwiYSI6ImNrNnZvdnNhdjAwM2Uza285cnVzejFnbGcifQ.NY_Z2Zm2h7wH2LWo9-HGCw', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: 'your.mapbox.access.token'
+        }),
 
-        var all_proyectos = new L.LayerGroup();
+        Relieve: L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoieWVjbzIzIiwiYSI6ImNrNnZvdnNhdjAwM2Uza285cnVzejFnbGcifQ.NY_Z2Zm2h7wH2LWo9-HGCw', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox/outdoors-v11',
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: 'your.mapbox.access.token'
+        })
+        };
 
         var collection = {{ proyectos |geojsonfeature:"popupContent"|safe }};
+        // var colleXD = {{ proyectos |geojsonfeature:"id"|safe }};
+        // console.log(collection);
+        // console.log(colleXD.features);
+        var all_proyectos = new L.LayerGroup();
+
+        
         function onEachFeature(feature, layer) {
             if (feature.properties && feature.properties.popupContent) {
               layer.bindPopup(feature.properties.popupContent);
@@ -123,30 +141,124 @@
 
           }
 
-        L.geoJson(collection, {onEachFeature: onEachFeature}).addTo(mymap);
+        var makers = L.geoJson(collection, {onEachFeature: onEachFeature});
 
-        console.log(all_proyectos);
+        var overlayMaps = {
+        "Proyectos": all_proyectos
+        };
 
-        var baseMaps = {
-        mapBox: L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoieWVjbzIzIiwiYSI6ImNrNnZvdnNhdjAwM2Uza285cnVzejFnbGcifQ.NY_Z2Zm2h7wH2LWo9-HGCw', {
-            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-            maxZoom: 18,
-            id: 'mapbox/streets-v11',
-            tileSize: 512,
-            zoomOffset: -1,
-            accessToken: 'your.mapbox.access.token'
-        })
-    };
+        var mymap = L.map('mapid', {
+            center: [-10.774303, -75.813227],
+            zoom: 13,
+            layers: [baseMaps.Calles, overlayMaps.Proyectos]
+        });
+        // console.log(all_proyectos);
 
-    var overlayMaps = {
-    "Proyectos": all_proyectos
-    };
+        var novosMarcadores = L.control.layers(baseMaps, overlayMaps).addTo(mymap);
 
-    L.control.layers(baseMaps, overlayMaps).addTo(mymap);
+        // $('#example').on( 'draw.dt', function () {
+        //     alert( 'Table redrawn' );
+        // } );
+
+        var table = $('#example').DataTable();
+ 
+        table.on( 'search.dt', function () {
+        // mymap.removeLayer(makers);
+        // var asdasd = {{ proyectos |geojsonfeature:"show_map"|safe }};
+        
+        // var myList = L.geoJSON(asdasd, {
+        //     filter: function(feature, layer) {
+        //         if (feature.properties) {
+        //         return feature.properties.show_map !== undefined ? !feature.properties.show_map : true;
+        //     }
+        //     return false;
+        //     }
+        // }).addTo(mymap);
+        // console.log(myList);
 
 
-    });
 
+
+
+
+
+            // $('#filterInfo').html( 'Currently applied global search: '+table.search() );
+            // var myrows = table.rows();
+            // console.log(myrows.length());
+
+            // var myquery = table.rows( { search: 'applied' } ).data()
+            // console.log(myquery);
+
+            // var otherquery = table.rows().data();
+            // console.log(otherquery);
+
+            // var otherquery = table.search();
+            // console.log(otherquery);
+            // var myArray = [];
+            // var data = table.rows({ search: 'applied' }).data();
+            // var colleXD = {{ proyectos |geojsonfeature:"id"|safe }};
+
+            // function onEachFeature(feature, layer) {
+            // if (feature.properties && feature.properties.id) {
+            //   feature.properties.id ===
+            // }
+
+            // }
+            // var filterValues = L.geoJson(colleXD, {onEachFeature: onEachFeature})
+            // console.log(data);
+
+            // data.each(function (value, index) {
+            //      // console.log(`For index ${index}, data value is ${value}`);
+            //      // console.log(data[index][0]);
+            //      myArray.push(data[index][0]);
+            // });
+            // console.log(myArray);
+            
+            // var filterValues = L.geoJson(colleXD, {filter: visibleMarkers(rowIdx)}).addTo(mymap);
+
+            table.rows({ search: 'applied' }).every(function(){
+                // var id = this;
+                // console.log(id);
+                // all_proyectos.removeLayer();
+                mymap.removeLayer(all_proyectos);
+                // var filterValues = L.geoJson(collection, {filter: visibleMarkers(rowIdx)}).addTo(mymap);
+            });
+
+
+
+            // function visibleMarkers(feature) {
+
+            // var numberOfRows = table.rows({ search: 'applied' }).length;
+            // var data = table.rows({ search: 'applied' });
+            // console.log(data);
+            // for (var i = 0; i < numberOfRows; i++) {
+            //     //get data from row
+            //     var currentRow = data[i];
+            //     // console.log(currentRow);
+            //     // console.log(currentRow[0]);
+            //     // console.log(feature.properties.id);
+            //     if (feature.properties.id === currentRow[0]) return true
+            // }
+            // return false;
+            
+            // }
+            // var colleXD = {{ proyectos |geojsonfeature:"id"|safe }};
+            // var filterValues = L.geoJson(colleXD, {filter: visibleMarkers}).addTo(mymap);
+
+
+
+        });
+
+
+
+
+
+        // var filterValues = L.geoJson(proyectos, {filter: visibleMarkers}).addTo(mymap);
+
+        // var popupContentXD = {{ proyectos |geojsonfeature:"popupContent"|safe }};
+        // console.log(popupContentXD);
+        // var nombreXD = {{ proyectos |geojsonfeature:"id"|safe }};
+        // console.log(nombreXD);
 
 
 </script>
