@@ -141,7 +141,7 @@
 
           }
 
-        var makers = L.geoJson(collection, {onEachFeature: onEachFeature});
+        L.geoJson(collection, {onEachFeature: onEachFeature});
 
         var overlayMaps = {
         "Proyectos": all_proyectos
@@ -154,105 +154,81 @@
         });
         // console.log(all_proyectos);
 
-        var novosMarcadores = L.control.layers(baseMaps, overlayMaps).addTo(mymap);
+        // var novosMarcadores = L.control.layers(baseMaps, overlayMaps).addTo(mymap);
 
         // $('#example').on( 'draw.dt', function () {
         //     alert( 'Table redrawn' );
         // } );
 
+        function onEachFeatureFilter(feature, layer) {
+            if (feature.properties && feature.properties.popupContent) {
+              layer.bindPopup(feature.properties.popupContent);
+              // layer.addTo(filter_proyectos);
+            }
+          }
+
+        // var makers = L.geoJson(collection, {onEachFeature: onEachFeature});
+
         var table = $('#example').DataTable();
- 
-        table.on( 'search.dt', function () {
-        // mymap.removeLayer(makers);
-        // var asdasd = {{ proyectos |geojsonfeature:"show_map"|safe }};
         
-        // var myList = L.geoJSON(asdasd, {
-        //     filter: function(feature, layer) {
-        //         if (feature.properties) {
-        //         return feature.properties.show_map !== undefined ? !feature.properties.show_map : true;
-        //     }
-        //     return false;
-        //     }
-        // }).addTo(mymap);
-        // console.log(myList);
+        filter_proyectos = new L.LayerGroup();
+        
+        var query_proyectos_id = {{ proyectos |geojsonfeature:"id"|safe }};
 
+        // var markersFiltered = new L.geoJSON();
 
+        var counter=0;
 
+        table.on( 'search.dt', function () {
 
-
-
-
-            // $('#filterInfo').html( 'Currently applied global search: '+table.search() );
-            // var myrows = table.rows();
-            // console.log(myrows.length());
-
-            // var myquery = table.rows( { search: 'applied' } ).data()
-            // console.log(myquery);
-
-            // var otherquery = table.rows().data();
-            // console.log(otherquery);
-
-            // var otherquery = table.search();
-            // console.log(otherquery);
-            // var myArray = [];
-            // var data = table.rows({ search: 'applied' }).data();
-            // var colleXD = {{ proyectos |geojsonfeature:"id"|safe }};
-
-            // function onEachFeature(feature, layer) {
-            // if (feature.properties && feature.properties.id) {
-            //   feature.properties.id ===
-            // }
-
-            // }
-            // var filterValues = L.geoJson(colleXD, {onEachFeature: onEachFeature})
-            // console.log(data);
-
-            // data.each(function (value, index) {
-            //      // console.log(`For index ${index}, data value is ${value}`);
-            //      // console.log(data[index][0]);
-            //      myArray.push(data[index][0]);
-            // });
-            // console.log(myArray);
-            
-            // var filterValues = L.geoJson(colleXD, {filter: visibleMarkers(rowIdx)}).addTo(mymap);
-
-            table.rows({ search: 'applied' }).every(function(){
-                // var id = this;
-                // console.log(id);
-                // all_proyectos.removeLayer();
+            if(counter==0){
                 mymap.removeLayer(all_proyectos);
-                // var filterValues = L.geoJson(collection, {filter: visibleMarkers(rowIdx)}).addTo(mymap);
-            });
+            }
+
+            if(counter!=0){
+                // mymap.removeLayer(filter_proyectos);
+                filter_proyectos.clearLayers();
+                // mymap.removeLayer(markersFiltered);
+            }
+
+            numberRowsResult = table.rows({search:'applied'}).data().length;
+            console.log(counter);
+            console.log(numberRowsResult);
+            result_query_data = table.rows({search:'applied'}).data();
+
+            for(var i=0; i<numberRowsResult; i++){
+                // mymap.removeLayer(filter_proyectos);
+                // mymap.removeLayer(markersFiltered);
+                // console.log(i);
+
+                // if(i!=0){
+                //     mymap.removeLayer(markersFiltered);
+                // }
+
+                // console.log(result_query_data[i][0]);
+                // console.log(result_query_data[i]);
+                // onEachFeatureFilter(result_query_data[i][0]);
+                // L.geoJson(query_proyectos_id, {onEachFeature: onEachFeatureFilter(feature, layer, result_query_data[i][0])});
 
 
+                var markersFiltered = L.geoJSON(query_proyectos_id, {
+                    onEachFeature: function(feature, layer) {
+                        if (result_query_data[i][0] == feature.properties.id) {
+                            layer.addTo(filter_proyectos);
+                            console.log(filter_proyectos);
+                            // console.log(result_query_data[i][0]);
+                            // console.log(feature.properties.id);
+                            return true;
+                        }
+                    }
+                });
+                console.log(markersFiltered);
+                // markersFiltered.addTo(mymap);
 
-            // function visibleMarkers(feature) {
-
-            // var numberOfRows = table.rows({ search: 'applied' }).length;
-            // var data = table.rows({ search: 'applied' });
-            // console.log(data);
-            // for (var i = 0; i < numberOfRows; i++) {
-            //     //get data from row
-            //     var currentRow = data[i];
-            //     // console.log(currentRow);
-            //     // console.log(currentRow[0]);
-            //     // console.log(feature.properties.id);
-            //     if (feature.properties.id === currentRow[0]) return true
-            // }
-            // return false;
-            
-            // }
-            // var colleXD = {{ proyectos |geojsonfeature:"id"|safe }};
-            // var filterValues = L.geoJson(colleXD, {filter: visibleMarkers}).addTo(mymap);
-
-
-
+            }
+            filter_proyectos.addTo(mymap);
+            counter++;
         });
-
-
-
-
-
         // var filterValues = L.geoJson(proyectos, {filter: visibleMarkers}).addTo(mymap);
 
         // var popupContentXD = {{ proyectos |geojsonfeature:"popupContent"|safe }};
@@ -263,4 +239,3 @@
 
 </script>
 {% endblock %}
-
