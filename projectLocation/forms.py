@@ -37,3 +37,4 @@ class ProyectoForm(ModelForm):
 			'geom':LeafletWidget(),
 			# 'show_map':CheckboxInput(default=True)
 		}
+

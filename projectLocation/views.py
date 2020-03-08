@@ -1,6 +1,7 @@
 from django.shortcuts import render
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import TemplateView
+from django.views.generic.detail import DetailView
 
 from .models import Localidad, Proyecto
 from .forms import LocalidadForm, ProyectoForm
@@ -31,3 +32,12 @@ class ProyectoCreateView(CreateView):
 	def form_valid(self, form):
 		form.instance.show_map=True
 		return super(ProyectoCreateView, self).form_valid(form)
+
+class ProyectoUpdateView(UpdateView):
+	model = Proyecto
+	form_class = ProyectoForm
+	success_url='/'
+
+class ProyectoDeleteView(DeleteView):
+	model = Proyecto
+	success_url='/'

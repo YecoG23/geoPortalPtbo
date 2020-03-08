@@ -157,4 +157,10 @@ LEAFLET_CONFIG = {
  'accessToken':'your.mapbox.access.token'})],
 'MIN_ZOOM': 3,
 'MAX_ZOOM': 18,
+'PLUGINS': {
+    'leaflet-ajax': {
+        'js': 'https://cdnjs.cloudflare.com/ajax/libs/leaflet-ajax/2.1.0/leaflet.ajax.min.js',
+        'auto-include': True,
+    },
+}
 }

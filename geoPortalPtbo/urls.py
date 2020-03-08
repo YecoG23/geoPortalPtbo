@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf.urls.static import static
+from django.conf import settings
 from django.views.generic import TemplateView
 
 from djgeojson.views import GeoJSONLayerView
@@ -25,8 +27,9 @@ from projectLocation.views import HomeTemplateView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',HomeTemplateView.as_view(), name='home'),
-    path('proyectos/',include('projectLocation.urls')),
+    path('proyecto/',include('projectLocation.urls')),
 
     ##URL GEOJSON
     path('data',GeoJSONLayerView.as_view(model=Proyecto), name='data')
-]
+
+]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

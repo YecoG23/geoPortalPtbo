@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+
 {% load static %}
 {% load geojson_tags %}
 
@@ -20,6 +21,7 @@
  -->
   <script>
     $(document).ready(function() {
+
     var table = $('#example').DataTable(
     {
             "language": {
@@ -102,13 +104,13 @@
         filter_proyectos = new L.LayerGroup();
         
         var query_proyectos_id = {{ proyectos |geojsonfeature:"id,popupContent" |safe }};
-        console.log(query_proyectos_id);
-        console.log(collection);
+        // console.log(query_proyectos_id);
+        // console.log(collection);
 
         var counter=0;
 
-        table.on( 'search.dt', function () {
-
+        table.on('search.dt', function () {
+            // console.log(counter);
             if(counter==0){
                 mymap.removeLayer(all_proyectos);
             }
@@ -122,11 +124,14 @@
             result_query_data = table.rows({search:'applied'}).data();
 
             for(var i=0; i<numberRowsResult; i++){
-
+                // console.log(i);
                 var markersFiltered = L.geoJSON(query_proyectos_id, {
                     onEachFeature: function(feature, layer) {
-                            console.log(feature.properties);
+                            // console.log(feature.properties);
+                            // console.log(result_query_data[i][0]);
+                            // console.log(feature.properties.id);
                         if (result_query_data[i][0] == feature.properties.id) {
+                            // console.log(1);
                             layer.addTo(filter_proyectos);
                             layer.bindPopup(feature.properties.popupContent);
                             return true;
@@ -135,11 +140,15 @@
                 });
 
             }
+            // console.log(filter_proyectos);
             filter_proyectos.addTo(mymap);
             counter++;
         });
 
-
+        // var geojson = new L.GeoJSON.AJAX("{% static 'data/CCPP-PTBO-GEOJSON.geojson' %}");
+        // geojson.on('data:loaded', function(){
+        // geojson.addTo(mymap);
+        // });
 
 } );
 </script>
@@ -151,7 +160,7 @@
 <div class="container-fluid" id="mapid">
 </div>
 
-<div class="mt-5 pb-5">
+<div class="mt-5 pb-5" id="data-tables">
 <table id="example" class="display" style="width:100%">
         <thead>
             <tr>
@@ -166,10 +175,12 @@
                 {%for pro in proyectos %}
                 <tr>
                     <td>
-                        {{pro.id}}
+                        {{ pro.id }}
                     </td>
                     <td>
+                    <a href="{{ pro.get_absolute_url }}">
                         {{pro.nombre}}
+                    </a>
                     </td>
                     <td>
                         {{pro.geom.x}}, {{pro.geom.y}}
@@ -178,7 +189,7 @@
                         {{pro.localidad}}
                     </td>
                     <td>
-                        {{pro.fecha_creacion}}
+                        {{pro.fecha_creacion |date:"Y/m/d" }}
                     </td>
                 </tr>
                 {% endfor %}  
@@ -195,96 +206,4 @@
     </table>
 </div>
 
-<!-- <script>
-	
-        var baseMaps = {
-        Calles: L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoieWVjbzIzIiwiYSI6ImNrNnZvdnNhdjAwM2Uza285cnVzejFnbGcifQ.NY_Z2Zm2h7wH2LWo9-HGCw', {
-            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-            maxZoom: 18,
-            id: 'mapbox/streets-v11',
-            tileSize: 512,
-            zoomOffset: -1,
-            accessToken: 'your.mapbox.access.token'
-        }),
-
-        Relieve: L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoieWVjbzIzIiwiYSI6ImNrNnZvdnNhdjAwM2Uza285cnVzejFnbGcifQ.NY_Z2Zm2h7wH2LWo9-HGCw', {
-            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-            maxZoom: 18,
-            id: 'mapbox/outdoors-v11',
-            tileSize: 512,
-            zoomOffset: -1,
-            accessToken: 'your.mapbox.access.token'
-        })
-        };
-
-        var collection = {{ proyectos |geojsonfeature:"popupContent"|safe }};
-
-        var all_proyectos = new L.LayerGroup();
-
-        
-        function onEachFeature(feature, layer) {
-            if (feature.properties && feature.properties.popupContent) {
-              layer.bindPopup(feature.properties.popupContent);
-              layer.addTo(all_proyectos);
-            }
-
-          }
-
-        L.geoJson(collection, {onEachFeature: onEachFeature});
-
-        var overlayMaps = {
-        "Proyectos": all_proyectos
-        };
-
-        var mymap = L.map('mapid', {
-            center: [-10.774303, -75.813227],
-            zoom: 13,
-            layers: [baseMaps.Calles, overlayMaps.Proyectos]
-        });
-
-        L.control.layers(baseMaps, overlayMaps).addTo(mymap);
-
-        var table = $('#example').DataTable();
-        
-        filter_proyectos = new L.LayerGroup();
-        
-        var query_proyectos_id = {{ proyectos |geojsonfeature:"id,popupContent" |safe }};
-        console.log(query_proyectos_id);
-        console.log(collection);
-
-        var counter=0;
-
-        table.on( 'search.dt', function () {
-
-            if(counter==0){
-                mymap.removeLayer(all_proyectos);
-            }
-
-            if(counter!=0){
-                filter_proyectos.clearLayers();
-            }
-
-            numberRowsResult = table.rows({search:'applied'}).data().length;
-
-            result_query_data = table.rows({search:'applied'}).data();
-
-            for(var i=0; i<numberRowsResult; i++){
-
-                var markersFiltered = L.geoJSON(query_proyectos_id, {
-                    onEachFeature: function(feature, layer) {
-                            console.log(feature.properties);
-                        if (result_query_data[i][0] == feature.properties.id) {
-                            layer.addTo(filter_proyectos);
-                            layer.bindPopup(feature.properties.popupContent);
-                            return true;
-                        }
-                    }
-                });
-
-            }
-            filter_proyectos.addTo(mymap);
-            counter++;
-        });
-
-</script> -->
 {% endblock %}

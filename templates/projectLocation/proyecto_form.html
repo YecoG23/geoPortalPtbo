@@ -3,7 +3,15 @@
 
 {% load crispy_forms_tags %}
 
-{% block title %}Nuevo Proyecto{% endblock title %}
+{% block title %}
+
+  {% if not object.pk %}
+    Nuevo Proyecto
+  {% else %}
+    Editar Proyecto
+  {% endif %}
+
+{% endblock title %}
 
 {% block custom_style %}
 
@@ -25,7 +33,13 @@
 <div class="row">
   <div class="col col-md-6 col-sm-12">
     <div class="page-header">
-      <h1>Nuevo Proyecto</h1>
+      <h1>
+          {% if not object.pk %}
+            Nuevo Proyecto
+          {% else %}
+            Editar Proyecto
+          {% endif %}
+      </h1>
     </div>
   </div>
 </div>
@@ -34,14 +48,32 @@
 <form class="form-horizontal" method="post">
 {% csrf_token %}
 <div class="row">
-  <div class="col-md-4 col-sm-12">
+  <div class="col-md-3 col-sm-6">
     {{form.nombre | as_crispy_field }}
   </div>
-  <div class="col-md-4 col-sm-12">
-    {{form.localidad | as_crispy_field }}
+  <div class="col-md-3 col-sm-6">
+    {{form.entidad | as_crispy_field }}
   </div>
-  <div class="col-md-4 col-sm-12">
-    {{form.fecha_creacion | as_crispy_field }}
+  <div class="col-md-3 col-sm-6">
+    {{form.modalidad_ejecucion | as_crispy_field }}
+  </div>
+  <div class="col-md-3 col-sm-6">
+    {{form.sector_financiamiento | as_crispy_field }}
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3 col-sm-6">
+    {{form.contratista | as_crispy_field }}
+  </div>
+  <div class="col-md-3 col-sm-6">
+    {{form.supervisor | as_crispy_field }}
+  </div>
+  <div class="col-md-3 col-sm-6">
+    {{form.residente | as_crispy_field }}
+  </div>
+  <div class="col-md-3 col-sm-6">
+    {{form.estado_obra | as_crispy_field }}
   </div>
 </div>
 
@@ -50,24 +82,46 @@
     {{form.geom | as_crispy_field }}
   </div>
 </div>
+
+<div class="row">
+  <div class="col-md-6">
+    {{form.localidad | as_crispy_field }}
+  </div>
+  <div class="col-md-6">
+    {{form.fecha_creacion | as_crispy_field }}
+  </div>
+</div>
+
 <div class="pb-5">
   <a href="javascript:history.back()" class="btn btn-default">Cancelar</a>
-  <button type="submit" class="btn btn-primary">Enviar</button>
+      {% if not object.pk %}
+  <button type="submit" class="btn btn-primary">
+        Crear Proyecto
+  </button>
+      {% else %}
+  <button type="submit" class="btn btn-primary">
+        Editar Proyecto
+  </button>
+  <a class="btn btn-danger float-right" data-method="delete" href="{% url 'delete_proyecto' proyecto.id %}">Eliminar Proyecto</a>
+      {% endif %}
+  
 </div>
 </form>
 {% endblock %}
 
 {% block page_js_datepicker %}
   <script type="text/javascript">
-      $(function() {
+
           $('#id_fecha_creacion').datetimepicker({
             format: 'DD/MM/YYYY',
+            // format: 'DD/MM/YYYY - hh:mm a',
             widgetPositioning:{
                                 horizontal: 'auto',
                                 vertical: 'auto'
                             },
             sideBySide: true,
+            locale:'es'
           });
-      });
+
   </script>
 {% endblock %}
