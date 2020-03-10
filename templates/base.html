@@ -78,6 +78,15 @@ code {
   <!-- JQuery JS -->
   <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 
+  <!-- MOMENTUM - JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
+
+
+  <!-- CHARJS - JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+  <!-- CHARJS - CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css" rel="stylesheet" type="text/css">
+
   {% block datatables_js %}
   {% endblock %}
 
@@ -91,7 +100,8 @@ code {
 </head>
 
 <body>
-  <nav class="mb-1 navbar navbar-expand-sm navbar-light fixed-top bg-light">
+<nav class="mb-1 navbar navbar-expand-sm navbar-light fixed-top bg-light">
+<div class="container">
     <a class="navbar-brand" href="/">GeoPtbo</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-333"
     aria-controls="navbarSupportedContent-333" aria-expanded="false" aria-label="Toggle navigation">
@@ -106,6 +116,9 @@ code {
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{% url 'add_proyecto' %}">Proyectos</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'add_localidad' %}">Exportar</a>
       </li>
     </ul>
     <ul class="navbar-nav ml-auto nav-flex-icons">
@@ -126,11 +139,22 @@ code {
   {% endif %}
 </ul>
 </div>
+</div>
+
 </nav>
+
+<script>
+$(document).ready(function() {
+  $('li.active').removeClass('active');
+  $('a[href="' + location.pathname + '"]').closest('li').addClass('active'); 
+});
+</script>
 
 <main role="main" class="container">
 
   {% block content %}
+
+
   {% endblock content %}
 
 </main><!-- /.container -->
@@ -146,7 +170,6 @@ code {
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 
   {% block page_js_datepicker %}

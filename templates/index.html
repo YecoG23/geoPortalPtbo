@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
 
 <style>
-	#mapid { height: 500px; }
+	#mapid { height: 480px; }
 </style>
 
 {% endblock custom_style %}
@@ -19,9 +19,9 @@
   <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 <!--   <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
  -->
+
   <script>
     $(document).ready(function() {
-
     var table = $('#example').DataTable(
     {
             "language": {
@@ -85,7 +85,6 @@
 
           }
 
-        L.geoJson(collection, {onEachFeature: onEachFeature});
 
         var overlayMaps = {
         "Proyectos": all_proyectos
@@ -97,7 +96,22 @@
             layers: [baseMaps.Calles, overlayMaps.Proyectos]
         });
 
-        L.control.layers(baseMaps, overlayMaps).addTo(mymap);
+        var geojsonMarkerOptions = {
+            radius: 8,
+            fillColor: "#EE360E",
+            color: "#000",
+            weight: 1,
+            opacity: 1,
+            fillOpacity: 0.8
+        };
+
+        L.geoJSON(collection, {onEachFeature: onEachFeature}, {
+            pointToLayer: function (feature, latlng) {
+                return L.circleMarker(latlng, geojsonMarkerOptions);
+            }}).addTo(mymap);
+
+
+        // L.control.layers(baseMaps, overlayMaps);
 
         // var table = $('#example').DataTable();
         
@@ -183,7 +197,7 @@
                     </a>
                     </td>
                     <td>
-                        {{pro.geom.x}}, {{pro.geom.y}}
+                        {{pro.geom.x|stringformat:".6f"}} , {{pro.geom.y|stringformat:".6f"}}
                     </td>
                     <td>
                         {{pro.localidad}}
@@ -205,5 +219,141 @@
         </tfoot>
     </table>
 </div>
+
+<div class="row pb-5">
+    <div class="col-lg-4">
+        <canvas id="mod_ejec_chart" width="400" height="400"></canvas>
+    </div>
+    <div class="col-lg-4">
+        <canvas id="tip_sec_chart" width="400" height="400"></canvas>
+    </div>
+    <div class="col-lg-4">
+        <canvas id="tip_est_chart" width="400" height="400">QW</canvas>
+    </div>
+</div>
+
+<script>
+
+var ctx1 = document.getElementById('mod_ejec_chart').getContext('2d');
+var ctx2 = document.getElementById('tip_sec_chart').getContext('2d');
+var ctx3 = document.getElementById('tip_est_chart').getContext('2d');
+
+var data1 ={
+        datasets: [
+        {
+        data: {{arr_data_mod_ejec}} ,
+        backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f"],
+    }],
+
+    // These labels appear in the legend and in the tooltips when hovering different arcs
+    labels: {{arr_label_mod_ejec |safe }}
+}
+
+var data2 ={
+        datasets: [
+        {
+        data: {{arr_data_tip_sec}} ,
+        backgroundColor: ["#235D9E", "#F07525","#E7F025","#25F0BF", "#F02544","#8125F0","#6cba9a"],
+    }],
+
+    // These labels appear in the legend and in the tooltips when hovering different arcs
+    labels: {{arr_label_tip_sec |safe }}
+}
+
+var data3 ={
+        datasets: [
+        {
+        data: {{arr_data_tip_est}} ,
+        backgroundColor: ["#F025CB", "#31F025","#25F0CB","#F0F710"],
+    }],
+
+    // These labels appear in the legend and in the tooltips when hovering different arcs
+    labels: {{arr_label_tip_est |safe }}
+}
+
+var options1 ={
+        title: {
+        display: true,
+        text: 'Cantidad de proyectos segun Modalidad de Ejecucion'
+      },
+        tooltips: {
+          callbacks: {
+            label: function(tooltipItem, data) {
+              //get the concerned dataset
+              var dataset = data.datasets[tooltipItem.datasetIndex];
+              //calculate the total of this data set
+              var total = dataset.data.reduce(function(previousValue, currentValue, currentIndex, array) {
+                return previousValue + currentValue;
+              });
+              //get the current items value
+              var currentValue = dataset.data[tooltipItem.index];
+              //calculate the precentage based on the total and current item, also this does a rough rounding to give a whole number
+              var percentage = Math.floor(((currentValue/total) * 100)+0.5);
+
+              return percentage + "%";
+            }
+          }
+        },
+}
+
+var options2 ={
+        title: {
+        display: true,
+        text: 'Cantidad de proyectos segun Sector de Financiamiento'
+      },
+        tooltips: {
+          callbacks: {
+            label: function(tooltipItem, data) {
+              var dataset = data.datasets[tooltipItem.datasetIndex];
+              var total = dataset.data.reduce(function(previousValue, currentValue, currentIndex, array) {
+                return previousValue + currentValue;
+              });
+              var currentValue = dataset.data[tooltipItem.index];
+              var percentage = Math.floor(((currentValue/total) * 100)+0.5);
+              return percentage + "%";
+            }
+          }
+        },
+}
+
+var options3 ={
+        title: {
+        display: true,
+        text: 'Cantidad de proyectos segun Estado de la Obra'
+      },
+        tooltips: {
+          callbacks: {
+            label: function(tooltipItem, data) {
+              var dataset = data.datasets[tooltipItem.datasetIndex];
+              var total = dataset.data.reduce(function(previousValue, currentValue, currentIndex, array) {
+                return previousValue + currentValue;
+              });
+              var currentValue = dataset.data[tooltipItem.index];
+              var percentage = Math.floor(((currentValue/total) * 100)+0.5);
+              return percentage + "%";
+            }
+          }
+        },
+}
+
+var myModEjecChart = new Chart(ctx1, {
+    type: 'doughnut',
+    data: data1,
+    options: options1
+});
+
+var myTipSecChart = new Chart(ctx2, {
+    type: 'doughnut',
+    data: data2,
+    options: options2
+});
+
+var myTipEstChart = new Chart(ctx3, {
+    type: 'doughnut',
+    data: data3,
+    options: options3
+});
+
+</script>
 
 {% endblock %}

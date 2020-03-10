@@ -30,6 +30,8 @@
 
 {% block content %}
 
+
+
 <div class="row">
   <div class="col col-md-6 col-sm-12">
     <div class="page-header">
@@ -48,38 +50,36 @@
 <form class="form-horizontal" method="post">
 {% csrf_token %}
 <div class="row">
-  <div class="col-md-3 col-sm-6">
+  <div class="col-md-12 col-sm-12">
     {{form.nombre | as_crispy_field }}
   </div>
-  <div class="col-md-3 col-sm-6">
+</div>
+<div class="row">
+  <div class="col-md-6 col-sm-12 col-lg-6">
     {{form.entidad | as_crispy_field }}
   </div>
-  <div class="col-md-3 col-sm-6">
-    {{form.modalidad_ejecucion | as_crispy_field }}
-  </div>
-  <div class="col-md-3 col-sm-6">
-    {{form.sector_financiamiento | as_crispy_field }}
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-md-3 col-sm-6">
+  <div class="col-md-6 col-sm-12 col-lg-6">
     {{form.contratista | as_crispy_field }}
   </div>
-  <div class="col-md-3 col-sm-6">
+</div>
+<div class="row">
+  <div class="col-md-6 col-sm-12 col-lg-6">
     {{form.supervisor | as_crispy_field }}
   </div>
-  <div class="col-md-3 col-sm-6">
+  <div class="col-md-6 col-sm-12 col-lg-6">
     {{form.residente | as_crispy_field }}
-  </div>
-  <div class="col-md-3 col-sm-6">
-    {{form.estado_obra | as_crispy_field }}
-  </div>
+  </div> 
 </div>
 
 <div class="row">
-  <div class="col-md-12">
-    {{form.geom | as_crispy_field }}
+  <div class="col-md-4 col-sm-6">
+    {{form.modalidad_ejecucion | as_crispy_field }}
+  </div>
+  <div class="col-md-4 col-sm-6">
+    {{form.sector_financiamiento | as_crispy_field }}
+  </div>
+  <div class="col-md-4 col-sm-6">
+    {{form.estado_obra | as_crispy_field }}
   </div>
 </div>
 
@@ -92,6 +92,14 @@
   </div>
 </div>
 
+<div class="row">
+  <div class="col-md-12">
+    {{form.geom | as_crispy_field }}
+  </div>
+</div>
+
+
+
 <div class="pb-5">
   <a href="javascript:history.back()" class="btn btn-default">Cancelar</a>
       {% if not object.pk %}
@@ -100,7 +108,7 @@
   </button>
       {% else %}
   <button type="submit" class="btn btn-primary">
-        Editar Proyecto
+        Actualizar Proyecto
   </button>
   <a class="btn btn-danger float-right" data-method="delete" href="{% url 'delete_proyecto' proyecto.id %}">Eliminar Proyecto</a>
       {% endif %}

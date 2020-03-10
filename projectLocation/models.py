@@ -15,25 +15,25 @@ class Localidad (models.Model):
 		verbose_name_plural = "Localidades"
 
 TIPOS_EJECUCION = [
-    ("Por Contrata", "OPC"),
-    ("Por Administracion Directa", "OAD"),
+    ("OPC", "Por Contrata"),
+    ("OAD", "Por Administracion Directa"),
 ]
 
 TIPOS_SECTORES = [
-    ("Agricultura", "AG"),
-    ("Educacion", "ED"),
-    ("Energia", "EG"),
-    ("Salud", "SA"),
-    ("Transporte y Comunicaciones", "TC"),
-    ("Vivienda, Construccion y Saneamiento", "VCS"),
-    ("Otros", "O"),
+    ("AG", "Agricultura"),
+    ("ED","Educacion"),
+    ("EG","Energia"),
+    ("SA","Salud"),
+    ("TC","Transporte y Comunicaciones"),
+    ("VCS","Vivienda, Construccion y Saneamiento"),
+    ("O","Otros"),
 ]
 
 TIPOS_ESTADOS_OBRAS = [
-    ("Finalizada", "F"),
-    ("En ejecucion", "E"),
-    ("Paralizada", "P"),
-    ("Sin ejecucion", "SE"),
+    ("F","Finalizada"),
+    ("E","En ejecucion"),
+    ("P","Paralizada"),
+    ("SE","Sin ejecucion"),
 ]
 
 class Proyecto (gismodels.Model):
