@@ -38,6 +38,7 @@ TIPOS_ESTADOS_OBRAS = [
 
 class Proyecto (gismodels.Model):
 	entidad = models.CharField(max_length=100)
+	snip = models.IntegerField()
 	nombre = models.CharField(max_length=100)
 	modalidad_ejecucion = models.CharField(max_length=100, choices=TIPOS_EJECUCION)
 	# fecha_inicio = models.DateTimeField(blank=True, default=datetime.now())
@@ -48,7 +49,10 @@ class Proyecto (gismodels.Model):
 	estado_obra = models.CharField(max_length=100, choices=TIPOS_ESTADOS_OBRAS)
 	geom = gismodels.PointField()
 	localidad = models.ForeignKey(Localidad,on_delete=models.CASCADE)
-	fecha_creacion = models.DateField(blank=True)
+	fecha_inicio = models.DateField(blank=True)
+	#FIELDS POR CONTROL
+	creado_en = models.DateTimeField(auto_now_add=True)
+	actualizado_en = models.DateTimeField(auto_now=True)
 
 	def __str__(self):
 		return self.nombre

@@ -50,8 +50,11 @@
 <form class="form-horizontal" method="post">
 {% csrf_token %}
 <div class="row">
-  <div class="col-md-12 col-sm-12">
+  <div class="col-lg-10 col-md-12 col-sm-12">
     {{form.nombre | as_crispy_field }}
+  </div>
+  <div class="col-lg-2 col-md-12 col-sm-12">
+    {{form.snip | as_crispy_field }}
   </div>
 </div>
 <div class="row">
@@ -88,7 +91,7 @@
     {{form.localidad | as_crispy_field }}
   </div>
   <div class="col-md-6">
-    {{form.fecha_creacion | as_crispy_field }}
+    {{form.fecha_inicio | as_crispy_field }}
   </div>
 </div>
 
@@ -120,7 +123,7 @@
 {% block page_js_datepicker %}
   <script type="text/javascript">
 
-          $('#id_fecha_creacion').datetimepicker({
+          $('#id_fecha_inicio').datetimepicker({
             format: 'DD/MM/YYYY',
             // format: 'DD/MM/YYYY - hh:mm a',
             widgetPositioning:{

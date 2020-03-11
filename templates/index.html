@@ -6,7 +6,7 @@
 {% block title %}Inicio{% endblock title %}
 
 {% block custom_style %}
-
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
 
 <style>
@@ -17,6 +17,7 @@
 
 {% block datatables_js %}
   <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.js"></script>
 <!--   <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
  -->
 
@@ -47,8 +48,10 @@
                     "sortAscending":  ": activar para ordenar en forma ascendente",
                     "sortDescending": ": activar para ordenar en forma descendente"
                 }
-            }
+            },
+            responsive:true
     }
+    
     
  );
 
@@ -96,22 +99,24 @@
             layers: [baseMaps.Calles, overlayMaps.Proyectos]
         });
 
-        var geojsonMarkerOptions = {
-            radius: 8,
-            fillColor: "#EE360E",
-            color: "#000",
-            weight: 1,
-            opacity: 1,
-            fillOpacity: 0.8
-        };
+        // var geojsonMarkerOptions = {
+        //     radius: 8,
+        //     fillColor: "#ff7800",
+        //     color: "#000",
+        //     weight: 1,
+        //     opacity: 1,
+        //     fillOpacity: 0.8
+        // };
 
-        L.geoJSON(collection, {onEachFeature: onEachFeature}, {
-            pointToLayer: function (feature, latlng) {
-                return L.circleMarker(latlng, geojsonMarkerOptions);
-            }}).addTo(mymap);
+        // L.geoJson(collection, {
+        //     pointToLayer: function (feature, latlng) {
+        //         return L.circleMarker(latlng, geojsonMarkerOptions);
+        //     }});
+
+        L.geoJson(collection, {onEachFeature:onEachFeature});
 
 
-        // L.control.layers(baseMaps, overlayMaps);
+        L.control.layers(baseMaps, overlayMaps).addTo(mymap);
 
         // var table = $('#example').DataTable();
         
@@ -179,10 +184,17 @@
         <thead>
             <tr>
                 <th>ID</th>
+                <th>SNIP</th>
                 <th>Nombre</th>
+                <th>Contratista</th>
+                <th>Supervisor</th>
+                <th>Residente</th>
                 <th>Ubicacion</th>
                 <th>Localidad</th>
-                <th>Fecha creacion</th>
+                <th>Modalidad Ejecucion</th>
+                <th>Sector Financiamiento</th>
+                <th>Estado Obra</th>
+                <th>Fecha Inicio</th>
             </tr>
         </thead>
         <tbody>
@@ -192,9 +204,21 @@
                         {{ pro.id }}
                     </td>
                     <td>
+                        {{pro.snip}}
+                    </td>
+                    <td>
                     <a href="{{ pro.get_absolute_url }}">
                         {{pro.nombre}}
                     </a>
+                    </td>
+                    <td>
+                        {{pro.contratista}}
+                    </td>
+                    <td>
+                        {{pro.supervisor}}
+                    </td>
+                    <td>
+                        {{pro.residente}}
                     </td>
                     <td>
                         {{pro.geom.x|stringformat:".6f"}} , {{pro.geom.y|stringformat:".6f"}}
@@ -203,7 +227,16 @@
                         {{pro.localidad}}
                     </td>
                     <td>
-                        {{pro.fecha_creacion |date:"Y/m/d" }}
+                        {{pro.get_modalidad_ejecucion_display}}
+                    </td>
+                    <td>
+                        {{pro.get_sector_financiamiento_display}}
+                    </td>
+                    <td>
+                        {{pro.get_estado_obra_display}}
+                    </td>
+                    <td>
+                        {{pro.fecha_inicio |date:"Y/m/d" }}
                     </td>
                 </tr>
                 {% endfor %}  
@@ -211,10 +244,17 @@
         <tfoot>
             <tr>
                 <th>ID</th>
+                <th>SNIP</th>
                 <th>Nombre</th>
+                <th>Contratista</th>
+                <th>Supervisor</th>
+                <th>Residente</th>
                 <th>Ubicacion</th>
                 <th>Localidad</th>
-                <th>Fecha creacion</th>
+                <th>Modalidad Ejecucion</th>
+                <th>Sector Financiamiento</th>
+                <th>Estado Obra</th>
+                <th>Fecha Inicio</th>
             </tr>
         </tfoot>
     </table>
@@ -228,7 +268,7 @@
         <canvas id="tip_sec_chart" width="400" height="400"></canvas>
     </div>
     <div class="col-lg-4">
-        <canvas id="tip_est_chart" width="400" height="400">QW</canvas>
+        <canvas id="tip_est_chart" width="400" height="400"></canvas>
     </div>
 </div>
 
