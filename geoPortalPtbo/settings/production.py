@@ -13,11 +13,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # Allow all hosts, so we can run on PaaS's like Heroku
 ALLOWED_HOSTS = ['geoptbo.herokuapp.com','geoptbo.com']
 
-# Configure the production database using dj_database_url
-import dj_database_url
-db_from_env = dj_database_url.config()
-#ESTO ES UNA PRUEBA
-DATABASES['default'].update(db_from_env)
+
 
 #STATIC FILES CONFIG
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -38,3 +34,9 @@ SECURE_FRAME_DENY = True
 #GDAL SETTINGS HEROKU
 GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH')
 GEOS_LIBRARY_PATH = os.environ.get('GEOS_LIBRARY_PATH')
+
+# Configure the production database using dj_database_url
+import dj_database_url
+db_from_env = dj_database_url.config()
+#ESTO ES UNA PRUEBA
+DATABASES['default'].update(db_from_env)
