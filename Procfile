@@ -1,1 +1,1 @@
-web:gunicorn geoPortalPtbo.wsgi:projectLocation --log-file -
+web:gunicorn geoPortalPtbo.wsgi --log-file -
